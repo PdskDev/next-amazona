@@ -11,16 +11,26 @@ import {
   Rating,
   Typography,
 } from '@mui/material';
-import { useEffect, useState } from 'react';
-import Layout from '../../components/Layout';
-import client from '../../utils/client';
-import NextLink from 'next/link';
-import classes from '../../utils/classes';
 import Image from 'next/image';
-import { urlFor } from '../../utils/images';
+import NextLink from 'next/link';
+import { useContext, useEffect, useState } from 'react';
+import { useSnackbar } from 'notistack';
+import Layout from '../../components/Layout';
+import classes from '../../utils/classes';
+import client from '../../utils/client';
+import { urlFor, urlForThumbnail } from '../../utils/image';
+import { Store } from '../../utils/Store';
+import axios from 'axios';
 
 export default function ProductScreen(props) {
   const { slug } = props;
+  const {
+    state: { cart },
+    dispatch,
+  } = useContext(Store);
+
+  const { enqueueSnackbar } = useSnackbar();
+
   const [state, setState] = useState({
     product: null,
     loading: true,
@@ -43,6 +53,31 @@ export default function ProductScreen(props) {
     };
     fetchData();
   }, [setState, slug, state]);
+
+  const addToCartHandler = async () => {
+    const existItem = cart.cartItems.find((x) => x._id === product._id);
+    const quantity = existItem ? existItem.quantity + 1 : 1;
+    const { data } = await axios.get(`/api/products/${product._id}`);
+    if (data.countInStock < quantity) {
+      enqueueSnackbar('Sorry. Product is out of stock', { variant: 'error' });
+      return;
+    }
+    dispatch({
+      type: 'CART_ADD_ITEM',
+      payload: {
+        _key: product._id,
+        name: product.name,
+        countInStock: product.countInStock,
+        slug: product.slug.current,
+        price: product.price,
+        image: urlForThumbnail(product.image),
+        quantity,
+      },
+    });
+    enqueueSnackbar(`${product.name} added to the cart`, {
+      variant: 'success',
+    });
+  };
 
   return (
     <Layout title={product?.title}>
@@ -117,7 +152,11 @@ export default function ProductScreen(props) {
                     </Grid>
                   </ListItem>
                   <ListItem>
-                    <Button fullWidth variant="contained">
+                    <Button
+                      onClick={addToCartHandler}
+                      fullWidth
+                      variant="contained"
+                    >
                       Add to cart
                     </Button>
                   </ListItem>
