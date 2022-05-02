@@ -1,6 +1,7 @@
 import '../styles/globals.css';
 import createCache from '@emotion/cache';
 import { cacheProvider } from '@emotion/react';
+import { StoreProvider } from '../utils/Store';
 
 const clientSideEmotionCache = createCache({ key: 'css' });
 
@@ -11,7 +12,9 @@ function MyApp({
 }) {
   return (
     <cacheProvider value={emotionCache}>
-      <Component {...pageProps} />
+      <StoreProvider>
+        <Component {...pageProps} />
+      </StoreProvider>
     </cacheProvider>
   );
 }
