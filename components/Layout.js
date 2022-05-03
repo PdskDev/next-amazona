@@ -20,7 +20,7 @@ import Cookies from 'js-cookie';
 
 export default function Layout({ title, description, children }) {
   const { state, dispatch } = useContext(Store);
-  const { darkMode, cart } = state;
+  const { darkMode, cart, userInfo } = state;
   const theme = createTheme({
     components: {
       MuiLink: {
@@ -95,9 +95,15 @@ export default function Layout({ title, description, children }) {
                   </Typography>
                 </Link>
               </NextLink>
-              <NextLink href="/login" passHref>
-                <Link>Login</Link>
-              </NextLink>
+              {userInfo ? (
+                <NextLink href="/profile" passHref>
+                  <Link>{userInfo.name}</Link>
+                </NextLink>
+              ) : (
+                <NextLink href="/login" passHref>
+                  <Link>Login</Link>
+                </NextLink>
+              )}
             </Box>
           </Toolbar>
         </AppBar>
