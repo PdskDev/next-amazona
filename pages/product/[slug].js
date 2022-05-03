@@ -21,8 +21,10 @@ import client from '../../utils/client';
 import { urlFor, urlForThumbnail } from '../../utils/image';
 import { Store } from '../../utils/Store';
 import axios from 'axios';
+import { useRouter } from 'next/router';
 
 export default function ProductScreen(props) {
+  const router = useRouter();
   const { slug } = props;
   const {
     state: { cart },
@@ -62,6 +64,7 @@ export default function ProductScreen(props) {
       enqueueSnackbar('Sorry. Product is out of stock', { variant: 'error' });
       return;
     }
+
     dispatch({
       type: 'CART_ADD_ITEM',
       payload: {
@@ -74,9 +77,12 @@ export default function ProductScreen(props) {
         quantity,
       },
     });
+
     enqueueSnackbar(`${product.name} added to the cart`, {
       variant: 'success',
     });
+
+    router.push('/cart');
   };
 
   return (
