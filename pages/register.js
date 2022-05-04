@@ -1,6 +1,7 @@
 import React, { useContext, useEffect } from 'react';
 import Layout from '../components/Layout';
 import { useForm, Controller } from 'react-hook-form';
+import NextLink from 'next/link';
 import Form from '../components/Form';
 import {
   Button,
@@ -10,12 +11,12 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import NextLink from 'next/link';
 import { useSnackbar } from 'notistack';
 import axios from 'axios';
-import { useRouter } from 'next/router';
 import jsCookie from 'js-cookie';
+import { useRouter } from 'next/router';
 import { Store } from '../utils/Store';
+import { getError } from '../utils/error';
 
 export default function RegisterScreen() {
   const { state, dispatch } = useContext(Store);
@@ -51,7 +52,7 @@ export default function RegisterScreen() {
       jsCookie.set('userInfo', JSON.stringify(data));
       router.push('/');
     } catch (err) {
-      enqueueSnackbar(err.message, { variant: 'error' });
+      enqueueSnackbar(getError(err), { variant: 'error' });
     }
   };
   return (
