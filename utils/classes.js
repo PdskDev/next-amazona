@@ -14,7 +14,7 @@ const classes = {
     marginTop: 1,
     textAlign: 'center',
   },
-  appbar: {
+  appBar: {
     backgroundColor: '#203040',
     '& a': {
       color: '#ffffff',
@@ -31,6 +31,9 @@ const classes = {
   navbarButton: {
     color: '#ffffff',
     textTransform: 'initial',
+  },
+  fullWidth: {
+    width: '100%',
   },
 };
 export default classes;

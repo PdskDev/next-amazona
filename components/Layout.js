@@ -77,10 +77,12 @@ export default function Layout({ title, description, children }) {
   };
 
   const logoutClickHandler = () => {
-    setAnchorEl = null;
+    setAnchorEl(null);
     dispatch({ type: 'USER_LOGOUT' });
     jsCookie.remove('userInfo');
     jsCookie.remove('cartItems');
+    jsCookie.remove('shippingAddress');
+    jsCookie.remove('paymentMethod');
     router.push('/');
   };
 
@@ -92,7 +94,7 @@ export default function Layout({ title, description, children }) {
       </Head>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <AppBar position="static" sx={classes.appbar}>
+        <AppBar position="static" sx={classes.appBar}>
           <Toolbar sx={classes.toolBar}>
             <Box display="flex" alignItems="center">
               <NextLink href="/" passHref>
@@ -143,6 +145,13 @@ export default function Layout({ title, description, children }) {
                       onClick={(e) => loginMenuCloseHandler(e, '/profile')}
                     >
                       Profile
+                    </MenuItem>
+                    <MenuItem
+                      onClick={(e) =>
+                        loginMenuCloseHandler(e, '/order-history')
+                      }
+                    >
+                      Order History
                     </MenuItem>
                     <MenuItem onClick={logoutClickHandler}>Logout</MenuItem>
                   </Menu>

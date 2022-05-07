@@ -16,16 +16,18 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
+import axios from 'axios';
+import dynamic from 'next/dynamic';
+import Image from 'next/image';
+import NextLink from 'next/link';
+import { useRouter } from 'next/router';
+import { useSnackbar } from 'notistack';
 import { useContext } from 'react';
 import Layout from '../components/Layout';
-import NextLink from 'next/link';
-import Image from 'next/image';
-import dynamic from 'next/dynamic';
 import { Store } from '../utils/Store';
-import axios from 'axios';
-import { useSnackbar } from 'notistack';
 
 function CartScreen() {
+  const router = useRouter();
   const {
     state: {
       cart: { cartItems },
@@ -41,7 +43,6 @@ function CartScreen() {
       enqueueSnackbar('Sorry. Product is out of stock', { variant: 'error' });
       return;
     }
-
     dispatch({
       type: 'CART_ADD_ITEM',
       payload: {
@@ -54,16 +55,13 @@ function CartScreen() {
         quantity,
       },
     });
-
-    enqueueSnackbar(`${item.name} updated to the cart`, {
+    enqueueSnackbar(`${item.name} updated in the cart`, {
       variant: 'success',
     });
   };
-
   const removeItemHandler = (item) => {
     dispatch({ type: 'CART_REMOVE_ITEM', payload: item });
   };
-
   return (
     <Layout title="Shopping Cart">
       <Typography component="h1" variant="h1">
@@ -72,7 +70,7 @@ function CartScreen() {
       {cartItems.length === 0 ? (
         <Box>
           <Typography>
-            Cart is empty.
+            Cart is empty.{' '}
             <NextLink href="/" passHref>
               <Link>Go shopping</Link>
             </NextLink>
@@ -87,7 +85,7 @@ function CartScreen() {
                   <TableRow>
                     <TableCell>Image</TableCell>
                     <TableCell>Name</TableCell>
-                    <TableCell align="right">Quantity</TableCell>
+                    <TableCell align="right">Qauntity</TableCell>
                     <TableCell align="right">Price</TableCell>
                     <TableCell align="right">Action</TableCell>
                   </TableRow>
@@ -150,14 +148,21 @@ function CartScreen() {
             <Card>
               <List>
                 <ListItem>
-                  <Typography variant={12}>
+                  <Typography variant="h2">
                     Subtotal ({cartItems.reduce((a, c) => a + c.quantity, 0)}{' '}
                     items) : ${' '}
                     {cartItems.reduce((a, c) => a + c.quantity * c.price, 0)}
                   </Typography>
                 </ListItem>
                 <ListItem>
-                  <Button fullWidth color="primary" variant="contained">
+                  <Button
+                    onClick={() => {
+                      router.push('/shipping');
+                    }}
+                    fullWidth
+                    color="primary"
+                    variant="contained"
+                  >
                     Checkout
                   </Button>
                 </ListItem>
