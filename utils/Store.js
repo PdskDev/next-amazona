@@ -25,10 +25,8 @@ function reducer(state, action) {
   switch (action.type) {
     case 'DARK_MODE_ON':
       return { ...state, darkMode: true };
-
     case 'DARK_MODE_OFF':
       return { ...state, darkMode: false };
-
     case 'CART_ADD_ITEM': {
       const newItem = action.payload;
       const existItem = state.cart.cartItems.find(
@@ -42,7 +40,6 @@ function reducer(state, action) {
       Cookies.set('cartItems', JSON.stringify(cartItems));
       return { ...state, cart: { ...state.cart, cartItems } };
     }
-
     case 'CART_REMOVE_ITEM': {
       const cartItems = state.cart.cartItems.filter(
         (item) => item._key !== action.payload._key
@@ -50,13 +47,11 @@ function reducer(state, action) {
       Cookies.set('cartItems', JSON.stringify(cartItems));
       return { ...state, cart: { ...state.cart, cartItems } };
     }
-
     case 'CART_CLEAR':
       return { ...state, cart: { ...state.cart, cartItems: [] } };
 
     case 'USER_LOGIN':
       return { ...state, userInfo: action.payload };
-
     case 'USER_LOGOUT':
       return {
         ...state,
@@ -66,7 +61,6 @@ function reducer(state, action) {
           shippingAddress: {},
         },
       };
-
     case 'SAVE_SHIPPING_ADDRESS':
       return {
         ...state,
@@ -75,7 +69,6 @@ function reducer(state, action) {
           shippingAddress: action.payload,
         },
       };
-
     case 'SAVE_PAYMENT_METHOD':
       return {
         ...state,
@@ -84,7 +77,6 @@ function reducer(state, action) {
           paymentMethod: action.payload,
         },
       };
-
     default:
       return state;
   }

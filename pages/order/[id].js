@@ -143,7 +143,6 @@ function OrderScreen({ params }) {
         );
         dispatch({ type: 'PAY_SUCCESS', payload: data });
         enqueueSnackbar('Order is paid', { variant: 'success' });
-        router.push(`/order/${order._id}`);
       } catch (err) {
         dispatch({ type: 'PAY_FAIL', payload: getError(err) });
         enqueueSnackbar(getError(err), { variant: 'error' });

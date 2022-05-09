@@ -1,30 +1,26 @@
-import { Alert, CircularProgress, Grid, Typography } from '@mui/material';
-import { useEffect, useState, useContext } from 'react';
+import { Alert, CircularProgress, Grid } from '@mui/material';
+import axios from 'axios';
+import { useRouter } from 'next/router';
+import { useSnackbar } from 'notistack';
+import { useContext, useEffect, useState } from 'react';
 import Layout from '../components/Layout';
 import ProductItem from '../components/ProductItem';
 import client from '../utils/client';
-import axios from 'axios';
-import { useRouter } from 'next/router';
 import { urlForThumbnail } from '../utils/image';
 import { Store } from '../utils/Store';
-import { useSnackbar } from 'notistack';
 
 export default function Home() {
-  const router = useRouter();
-
   const {
     state: { cart },
     dispatch,
   } = useContext(Store);
-
+  const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
-
   const [state, setState] = useState({
     products: [],
     error: '',
     loading: true,
   });
-
   const { loading, error, products } = state;
 
   useEffect(() => {
@@ -47,7 +43,6 @@ export default function Home() {
       enqueueSnackbar('Sorry. Product is out of stock', { variant: 'error' });
       return;
     }
-
     dispatch({
       type: 'CART_ADD_ITEM',
       payload: {
@@ -60,11 +55,9 @@ export default function Home() {
         quantity,
       },
     });
-
     enqueueSnackbar(`${product.name} added to the cart`, {
       variant: 'success',
     });
-
     router.push('/cart');
   };
 

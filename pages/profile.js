@@ -1,5 +1,4 @@
 import { Button, List, ListItem, TextField, Typography } from '@mui/material';
-import Layout from '../components/Layout';
 import axios from 'axios';
 import jsCookie from 'js-cookie';
 import dynamic from 'next/dynamic';
@@ -8,6 +7,7 @@ import { useSnackbar } from 'notistack';
 import React, { useContext, useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import Form from '../components/Form';
+import Layout from '../components/Layout';
 import { getError } from '../utils/error';
 import { Store } from '../utils/Store';
 
@@ -15,7 +15,6 @@ function ProfileScreen() {
   const router = useRouter();
   const { state, dispatch } = useContext(Store);
   const { userInfo } = state;
-
   const {
     handleSubmit,
     control,
@@ -25,22 +24,19 @@ function ProfileScreen() {
 
   useEffect(() => {
     if (!userInfo) {
-      router.push('/login');
+      return router.push('/login');
     }
-
     setValue('name', userInfo.name);
     setValue('email', userInfo.email);
   }, [router, setValue, userInfo]);
 
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
-
   const submitHandler = async ({ name, email, password, confirmPassword }) => {
     closeSnackbar();
     if (password !== confirmPassword) {
       enqueueSnackbar("Passwords don't match", { variant: 'error' });
       return;
     }
-
     try {
       const { data } = await axios.put(
         '/api/users/profile',
@@ -49,11 +45,8 @@ function ProfileScreen() {
           email,
           password,
         },
-        {
-          headers: { authorization: `Bearer ${userInfo.token}` },
-        }
+        { headers: { authorization: `Bearer ${userInfo.token}` } }
       );
-
       dispatch({ type: 'USER_LOGIN', payload: data });
       jsCookie.set('userInfo', JSON.stringify(data));
       enqueueSnackbar('Profile updated successfully', { variant: 'success' });
@@ -61,7 +54,6 @@ function ProfileScreen() {
       enqueueSnackbar(getError(err), { variant: 'error' });
     }
   };
-
   return (
     <Layout title="Profile">
       <Typography component="h1" variant="h1">

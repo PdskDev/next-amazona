@@ -49,7 +49,7 @@ function PlaceOrderScreen() {
     if (!paymentMethod) {
       router.push('/payment');
     }
-  }, [cartItems, paymentMethod, router]);
+  }, [paymentMethod, router]);
 
   const placeOrderHandler = async () => {
     try {

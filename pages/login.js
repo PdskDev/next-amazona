@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useCallback, useContext, useEffect } from 'react';
 import Layout from '../components/Layout';
 import { useForm, Controller } from 'react-hook-form';
 import NextLink from 'next/link';
@@ -24,12 +24,15 @@ export default function LoginScreen() {
   const router = useRouter();
   const { redirect } = router.query;
 
-  useEffect(() => {
+  const NotLoggedRouteToHomePage = useCallback(() => {
     if (userInfo) {
       router.push(redirect || '/');
     }
-  }, [router, userInfo, redirect]);
+  }, [redirect, router, userInfo]);
 
+  useEffect(() => {
+    NotLoggedRouteToHomePage();
+  }, [NotLoggedRouteToHomePage]);
   const {
     handleSubmit,
     control,
@@ -37,7 +40,6 @@ export default function LoginScreen() {
   } = useForm();
 
   const { enqueueSnackbar } = useSnackbar();
-
   const submitHandler = async ({ email, password }) => {
     try {
       const { data } = await axios.post('/api/users/login', {
@@ -122,7 +124,7 @@ export default function LoginScreen() {
             </Button>
           </ListItem>
           <ListItem>
-            Do not an account ?{' '}
+            Do not have an account?{' '}
             <NextLink href={`/register?redirect=${redirect || '/'}`} passHref>
               <Link>Register</Link>
             </NextLink>

@@ -1,5 +1,5 @@
 import { Button, List, ListItem, TextField, Typography } from '@mui/material';
-import React, { useContext, useEffect } from 'react';
+import React, { useCallback, useContext, useEffect } from 'react';
 import CheckoutWizard from '../components/CheckoutWizard';
 import Layout from '../components/Layout';
 import Form from '../components/Form';
@@ -22,17 +22,21 @@ export default function ShippingScreen() {
     cart: { shippingAddress },
   } = state;
 
-  useEffect(() => {
+  const userIsNotLogged = useCallback(() => {
     if (!userInfo) {
       return router.push('/login?redirect=/shipping');
     }
+  }, [router, userInfo]);
+
+  useEffect(() => {
+    userIsNotLogged();
 
     setValue('fullName', shippingAddress.fullName);
     setValue('address', shippingAddress.address);
     setValue('city', shippingAddress.city);
     setValue('postalCode', shippingAddress.postalCode);
     setValue('country', shippingAddress.country);
-  }, [router, setValue, shippingAddress, userInfo]);
+  }, [router, setValue, shippingAddress, userInfo, userIsNotLogged]);
 
   const submitHandler = ({ fullName, address, city, postalCode, country }) => {
     dispatch({

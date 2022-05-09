@@ -1,7 +1,8 @@
 import axios from 'axios';
 import nc from 'next-connect';
-import config from '../../../../utils/config';
-import { isAuth, signToken } from '../../../../utils/auth';
+import bcrypt from 'bcryptjs';
+import config from '../../../utils/config';
+import { isAuth, signToken } from '../../../utils/auth';
 
 const handler = nc();
 
@@ -18,7 +19,7 @@ handler.put(async (req, res) => {
             set: {
               name: req.body.name,
               email: req.body.email,
-              password: req.body.password,
+              password: bcrypt.hashSync(req.body.password),
             },
           },
         },
